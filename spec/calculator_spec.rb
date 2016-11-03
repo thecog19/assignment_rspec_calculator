@@ -11,11 +11,27 @@ describe Calculator do
     it 'adds negative numbers' do
       expect(calc.add(-4,-2)).to eq(-6)
     end
+
+    it 'adds floats together' do
+        expect(calc.add(0.4, 0.3)).to be_within(0.01).of(0.7)
+    end
+
+    it 'adds negative floats together' do
+        expect(calc.add(0.4, -0.3)).to be_within(0.01).of(0.1)
+    end
   end
 
   describe '#subtract' do
     it 'subtracts two numbers from eachother' do
       expect(calc.subtract(8,4)).to eq(4)
+    end
+
+    it 'subtracts two negative number from eachother' do
+      expect(calc.subtract(-1,-3)).to eq(2)
+    end
+
+    it 'subtracts floats' do
+        expect(calc.subtract(0.4, 0.3)).to be_within(0.01).of(0.1)
     end
   end
 
@@ -34,11 +50,23 @@ describe Calculator do
       expect{ calc.divide(16, 0) }.to raise_error(ArgumentError)
     end
 
+    it "returns a float if there is a remainder" do
+      expect(calc.divide(5.0, 3)).to be_kind_of(Float)
+    end
+
   end
 
   describe '#pow' do
     it 'returns a to power b' do
       expect(calc.pow(8,2)).to eq(64)
+    end
+
+    it 'returns a to power b if negative' do
+      expect(calc.pow(-3,3)).to eq(-27)
+    end
+
+    it 'returns a to power b if decimal' do
+      expect(calc.pow(1.1,2)).to be_within(0.01).of(1.21)
     end
   end
 
@@ -51,6 +79,17 @@ describe Calculator do
       expect { calc.sqrt(-1) }.to raise_error(ArgumentError)
     end
 
+    it 'returns a rounded number' do
+      expect(calc.sqrt(2)).to eq(1.41)
+    end
+
+  end
+
+  describe '#memory=' do
+    it 'stores a value' do
+      calc.memory=('asdf')
+      expect(calc.instance_variable_get( :@memory)).to eq('asdf')
+    end
   end
 
   describe '#memory' do
@@ -68,8 +107,15 @@ describe Calculator do
       calc.memory
       expect(calc.memory).to eq(nil)
     end
-
   end
 
+  describe '#output' do
+    it "returns the original parameter" do
+      expect(calc.output(10)).to eq(10)
+    end
 
+    it "returns parameter as string" do
+      expect(Calculator.new(true).output(10)).to eq("10")
+    end
+  end
 end
